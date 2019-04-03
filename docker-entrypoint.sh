@@ -20,8 +20,8 @@ fi
 echo Checking AWS credentials....
 aws s3 ls "${S3_OUTPUT_URI}"
 
-if [ "$?" != "" ]; then
-	echo Could not list ${S3_OUTPUT_URI}@
+if [ "$?" != "0" ]; then
+	echo Could not list ${S3_OUTPUT_URI}
 	exit 2
 fi
 
@@ -31,7 +31,7 @@ ct-ng "${SAMPLE_TO_BUILD}"
 echo ----------------------------------------
 echo Building......
 
-cg-ng build
+ct-ng build
 
 cd x-tools
 ls -lh
@@ -39,6 +39,10 @@ echo ---------------------------------------
 echo Packaging.....
 
 tar c ${SAMPLE_TO_BUILD} | xz > ~/${SAMPLE_TO_BUILD}.tar.xz
+
+echo ---------------------------------------
+echo Uploading.....
+aws s3 cp ~/${SAMPLE_TO_BUILD}.tar.xz "${S3_UPLOAD_URI}"/${SAMPLE_TO_BUILD}.tar.xz
 
 echo ----------------------------------------
 echo All done!
