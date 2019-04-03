@@ -1,0 +1,45 @@
+#!/bin/bash
+
+cd
+
+if [ "$1" != "" ]; then
+	SAMPLE_TO_BUILD="$1"
+fi
+
+if [ "$SAMPLE_TO_BUILD" == "" ]; then
+	echo To build a cross-compiler, either set SAMPLE_TO_BUILD or call with the first argument as one of the following samples:
+	ct-ng list-samples
+	exit 0
+fi
+
+if [ "$S3_OUTPUT_URI" == "" ]; then
+	echo You need to set S3_OUTPUT_URI so that the results have somewhere to go
+	exit 1
+fi
+
+echo Checking AWS credentials....
+aws s3 ls "${S3_OUTPUT_URI}"
+
+if [ "$?" != "" ]; then
+	echo Could not list ${S3_OUTPUT_URI}@
+	exit 2
+fi
+
+echo Configuring....
+ct-ng "${SAMPLE_TO_BUILD}"
+
+echo ----------------------------------------
+echo Building......
+
+cg-ng build
+
+cd x-tools
+ls -lh
+echo ---------------------------------------
+echo Packaging.....
+
+tar c ${SAMPLE_TO_BUILD} | xz > ~/${SAMPLE_TO_BUILD}.tar.xz
+
+echo ----------------------------------------
+echo All done!
+
