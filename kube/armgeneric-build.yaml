@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: armgeneric-build
+spec:
+  template:
+    metadata:
+      name: armgeneric-build
+      labels:
+        description: crosscompiler
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchExpressions:
+                  - key: description
+                    operator: In
+                    values:
+                      - crosscompiler
+      containers:
+      - name: armgeneric-build
+        image: andyg42/ubuntu-crosstool:latest
+        env:
+          - name: SAMPLE_TO_BUILD
+            value: arm-unknown-linux-gnueabi
+          - name: S3_OUTPUT_URI
+            value: s3://{{output_bucket}}
+        volumeMounts:
+        - mountPath: /home/build/.aws
+          name: aws-credentials-secret
+      volumes:
+      - name: aws-credentials-secret
+        secret:
+          secretName: aws-credentials-secret
+      restartPolicy: Never
+  backoffLimit: 4
