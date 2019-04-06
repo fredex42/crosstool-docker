@@ -27,6 +27,7 @@ fi
 
 echo Configuring....
 ct-ng "${SAMPLE_TO_BUILD}"
+patch < /home/build/glibc_version.patch
 
 echo ----------------------------------------
 echo Building......
@@ -46,4 +47,3 @@ aws s3 cp ~/${SAMPLE_TO_BUILD}.tar.xz "${S3_UPLOAD_URI}"/${SAMPLE_TO_BUILD}.tar.
 
 echo ----------------------------------------
 echo All done!
-

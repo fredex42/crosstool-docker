@@ -5,8 +5,10 @@ COPY install-crosstool.sh /tmp
 RUN pip3 install awscli && chmod a+x /tmp/install-crosstool.sh; /tmp/install-crosstool.sh
 
 COPY docker-entrypoint.sh /
+
 RUN useradd build && mkdir -p /home/build && chown build /home/build; chmod a+x /docker-entrypoint.sh
 
 USER build
+COPY glibc_version.patch /home/build
 
 CMD /docker-entrypoint.sh
