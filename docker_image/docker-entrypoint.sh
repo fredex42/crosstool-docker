@@ -43,7 +43,7 @@ tar c ${SAMPLE_TO_BUILD} | xz > ~/${SAMPLE_TO_BUILD}.tar.xz
 
 echo ---------------------------------------
 echo Uploading.....
-aws s3 cp ~/${SAMPLE_TO_BUILD}.tar.xz "${S3_UPLOAD_URI}"/${SAMPLE_TO_BUILD}.tar.xz
+aws s3 cp ~/${SAMPLE_TO_BUILD}.tar.xz "${S3_OUTPUT_URI}"/${SAMPLE_TO_BUILD}.tar.xz
 
 echo ----------------------------------------
 echo All done!
