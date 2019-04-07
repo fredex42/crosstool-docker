@@ -26,8 +26,8 @@ if [ "$?" != "0" ]; then
 fi
 
 echo Configuring....
-if [ -f "${HOME}/${SAMPLE_TO_BUILD}.conf" ]; then
-	cp ${HOME}/${SAMPLE_TO_BUILD}.conf ${HOME}/.config
+if [ -f "${HOME}/${SAMPLE_TO_BUILD}.config" ]; then
+	cp ${HOME}/${SAMPLE_TO_BUILD}.config ${HOME}/.config
 else
 	ct-ng "${SAMPLE_TO_BUILD}"
 	patch < /home/build/glibc_version.patch
@@ -40,14 +40,18 @@ ct-ng build
 
 cd x-tools
 ls -lh
-echo ---------------------------------------
-echo Packaging.....
 
-tar c ${SAMPLE_TO_BUILD} | xz > ~/${SAMPLE_TO_BUILD}.tar.xz
 
-echo ---------------------------------------
-echo Uploading.....
-aws s3 cp ~/${SAMPLE_TO_BUILD}.tar.xz "${S3_OUTPUT_URI}"/${SAMPLE_TO_BUILD}.tar.xz
+for x in `find . -type d -maxdepth 1 -mindepth 1`; do
+	PKGNAME=`basename $x`
+	echo ---------------------------------------
+	echo Packaging $PKGNAME.....
+	tar c ${PKGNAME} | xz > ~/${PKGNAME}.tar.xz
+
+	echo ---------------------------------------
+	echo Uploading.....
+	aws s3 cp ~/${PKGNAME}.tar.xz "${S3_OUTPUT_URI}"/${PKGNAME}.tar.xz
+done
 
 echo ----------------------------------------
 echo All done!

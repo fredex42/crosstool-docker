@@ -10,6 +10,6 @@ RUN useradd build && mkdir -p /home/build && chown build /home/build; chmod a+x 
 
 USER build
 COPY glibc_version.patch /home/build
-COPY armv7-rpi2-linux-gnueabihf-glibc2.24.conf /home/build
+COPY *.config /home/build/
 
 CMD /docker-entrypoint.sh
