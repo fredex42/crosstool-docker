@@ -26,8 +26,12 @@ if [ "$?" != "0" ]; then
 fi
 
 echo Configuring....
-ct-ng "${SAMPLE_TO_BUILD}"
-patch < /home/build/glibc_version.patch
+if [ -f "${HOME}/${SAMPLE_TO_BUILD}.conf" ]; then
+	cp ${HOME}/${SAMPLE_TO_BUILD}.conf ${HOME}/.config
+else
+	ct-ng "${SAMPLE_TO_BUILD}"
+	patch < /home/build/glibc_version.patch
+fi
 
 echo ----------------------------------------
 echo Building......
