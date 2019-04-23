@@ -23,18 +23,23 @@ spec:
                       - crosscompiler
       containers:
       - name: rpi1-build
-        image: andyg42/ubuntu-crosstool:latest
+        image: andyg42/ubuntu-crosstool:9
         env:
           - name: SAMPLE_TO_BUILD
-            value: armv6-rpi-linux-gnueabi
+            value: testconfigs/armv6-rpi-gnueabihf-glibc2.24
           - name: S3_OUTPUT_URI
-            value: s3://{{output_bucket}}
+            value: s3://{{output bucket}}
         volumeMounts:
         - mountPath: /home/build/.aws
           name: aws-credentials-secret
+        - mountPath: /home/build/testconfigs
+          name: test-configs
       volumes:
       - name: aws-credentials-secret
         secret:
           secretName: aws-credentials-secret
-      restartPolicy: Never
+      - name: test-configs
+        configMap:
+          name: test-build-configs
+      restartPolicy: OnFailure
   backoffLimit: 4

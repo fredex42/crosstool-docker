@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 cd
 
@@ -38,9 +38,13 @@ echo Building......
 
 ct-ng build
 
+if [ ! -d "x-tools" ]; then
+	echo Build failed, no x-tools directory existing
+	exit 1
+fi
+
 cd x-tools
 ls -lh
-
 
 for x in `find . -type d -maxdepth 1 -mindepth 1`; do
 	PKGNAME=`basename $x`

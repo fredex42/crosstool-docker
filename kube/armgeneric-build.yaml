@@ -23,12 +23,12 @@ spec:
                       - crosscompiler
       containers:
       - name: armgeneric-build
-        image: andyg42/ubuntu-crosstool:latest
+        image: andyg42/ubuntu-crosstool:5
         env:
           - name: SAMPLE_TO_BUILD
             value: arm-unknown-linux-gnueabi
           - name: S3_OUTPUT_URI
-            value: s3://{{output_bucket}}
+            value: s3://gnm-multimedia-deployables
         volumeMounts:
         - mountPath: /home/build/.aws
           name: aws-credentials-secret

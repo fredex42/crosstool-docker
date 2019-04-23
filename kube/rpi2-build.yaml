@@ -23,12 +23,12 @@ spec:
                       - crosscompiler
       containers:
       - name: rpi2-build
-        image: andyg42/ubuntu-crosstool:latest
+        image: andyg42/ubuntu-crosstool:7
         env:
           - name: SAMPLE_TO_BUILD
-            value: armv7-rpi2-linux-gnueabihf
+            value: armv7-rpi2-linux-gnueabihf-glibc2.24
           - name: S3_OUTPUT_URI
-            value: s3://{{output_bucket}}
+            value: s3://{{output bucket}}
         volumeMounts:
         - mountPath: /home/build/.aws
           name: aws-credentials-secret
